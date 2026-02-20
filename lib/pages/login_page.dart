@@ -1,15 +1,39 @@
 import 'package:basic_authentication/components/my_button.dart';
 import 'package:basic_authentication/components/my_textfield.dart';
 import 'package:basic_authentication/components/square_tile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void onSignInPressed() {}
+  void onSignInPressed() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      // Handle authentication errors
+      String errorMessage = 'An error occurred';
+      if (e.code == 'user-not-found') {
+        errorMessage = 'No user found for that email.';
+      } else if (e.code == 'wrong-password') {
+        errorMessage = 'Wrong password provided.';
+      } else if (e.code == 'invalid-email') {
+        errorMessage = 'Invalid email address.';
+      } else if (e.code == 'network-request-failed') {
+        errorMessage = 'Network error. Please check your connection.';
+      }
+      // You can show a SnackBar or Dialog here with errorMessage
+      print('Firebase Auth Error: ${e.code} - $errorMessage');
+    } catch (e) {
+      print('Error signing in: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +59,10 @@ class LoginPage extends StatelessWidget {
 
               SizedBox(height: 16),
 
-              // username field
+              // email field
               MyTextField(
-                controller: usernameController,
-                hintText: 'Username',
+                controller: emailController,
+                hintText: 'Email',
                 obscureText: false,
               ),
 
