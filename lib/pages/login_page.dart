@@ -1,3 +1,4 @@
+import 'package:basic_authentication/components/my_button.dart';
 import 'package:basic_authentication/components/my_textfield.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +7,8 @@ class LoginPage extends StatelessWidget {
 
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+
+  void onSignInPressed() {}
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +71,7 @@ class LoginPage extends StatelessWidget {
               SizedBox(height: 25),
 
               // sign in button
-              
+              MyButton(text: 'Sign In', onPressed: onSignInPressed),
 
               // or continue with
 
