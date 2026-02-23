@@ -5,7 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final void Function()? onTapRegister;
+  const LoginPage({super.key, required this.onTapRegister});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -193,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Text('Not a member?'),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: widget.onTapRegister,
                       child: Text(
                         'Register now',
                         style: TextStyle(
