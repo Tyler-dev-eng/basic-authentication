@@ -4,34 +4,71 @@ import 'package:basic_authentication/components/square_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
 
   void onSignInPressed() async {
+    // show loading indicator
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
     } on FirebaseAuthException catch (e) {
-      // Handle authentication errors
-      String errorMessage = 'An error occurred';
-      if (e.code == 'user-not-found') {
-        errorMessage = 'No user found for that email.';
-      } else if (e.code == 'wrong-password') {
-        errorMessage = 'Wrong password provided.';
-      } else if (e.code == 'invalid-email') {
-        errorMessage = 'Invalid email address.';
-      } else if (e.code == 'network-request-failed') {
-        errorMessage = 'Network error. Please check your connection.';
+      String errorMessage;
+      switch (e.code) {
+        case 'user-not-found':
+          errorMessage = 'No user found for that email.';
+          break;
+        case 'wrong-password':
+          errorMessage = 'Wrong password provided.';
+          break;
+        case 'invalid-credential':
+        case 'invalid-login-credentials':
+          errorMessage = 'Invalid email or password.';
+          break;
+        case 'invalid-email':
+          errorMessage = 'Invalid email address.';
+          break;
+        case 'network-request-failed':
+          errorMessage = 'Network error. Please check your connection.';
+          break;
+        default:
+          errorMessage = e.message ?? 'An error occurred.';
       }
-      // You can show a SnackBar or Dialog here with errorMessage
-      print('Firebase Auth Error: ${e.code} - $errorMessage');
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(errorMessage)));
+      }
     } catch (e) {
-      print('Error signing in: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error signing in: $e')));
+      }
+    } finally {
+      // dismiss loading indicator
+      if (mounted) {
+        Navigator.pop(context);
+      }
     }
   }
 
