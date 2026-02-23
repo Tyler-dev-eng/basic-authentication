@@ -1,6 +1,7 @@
 import 'package:basic_authentication/components/my_button.dart';
 import 'package:basic_authentication/components/my_textfield.dart';
 import 'package:basic_authentication/components/square_tile.dart';
+import 'package:basic_authentication/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -173,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                     // google button
                     SquareTile(
                       imagePath: 'lib/images/google.png',
-                      onTap: () {},
+                      onTap: () => AuthService().signInWithGoogle(),
                     ),
 
                     SizedBox(width: 25),
