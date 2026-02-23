@@ -130,23 +130,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     obscureText: true,
                   ),
 
-                  // forgot password?
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            'Forgot Password?',
-                            style: TextStyle(color: Colors.grey[600]),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
                   SizedBox(height: 16),
 
                   // sign in button
